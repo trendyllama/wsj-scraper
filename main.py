@@ -22,8 +22,13 @@ HEADERS = {
     'User-Agent': random.choice(USER_AGENTS)
 }
 
-CLASS_OF_HEADLINES = ''
-TAG_OF_HEALINES = ''
+
+# Example Headline HTML Element
+
+# <span class="WSJTheme--headlineText--He1ANr9C ">Harris Makes Risky Bet That Walz Can Prop Up Blue Wall</span>
+
+CLASS_OF_HEADLINES = 'span'
+TAG_OF_HEALINES = 'WSJTheme--headlineText--He1ANr9C'
 
 
 
@@ -32,10 +37,19 @@ def main() -> None:
 
     r = requests.get(url=URL, headers=HEADERS, timeout=2)
 
-    soup = bs4.BeautifulSoup(markup=r.content)
+    if r.status_code != '200':
 
-    articles = soup.find_all(name=TAG_OF_HEALINES, attrs={'class': CLASS_OF_HEADLINES})
+        print(f'request failed with code {r.status_code} \n\n {r.text}')
+        
+        raise SystemExit
 
+    soup = bs4.BeautifulSoup(r.content, 'html.parser')
+
+
+
+    articles = soup.find_all(name=TAG_OF_HEALINES, attrs={'class': CLASS_OF_HEADLINES}, recursive=True)
+
+    print(articles)
     for article in articles:
         print(article)
 
