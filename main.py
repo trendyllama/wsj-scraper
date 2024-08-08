@@ -4,7 +4,7 @@ import random
 import requests
 import bs4
 
-URL = 'https://www.wsj.com/'
+URL = 'https://www.wsj.com/news/latest-headlines?mod=nav_top_section'
 
 
 USER_AGENTS = [
@@ -19,37 +19,44 @@ USER_AGENTS = [
 
 
 HEADERS = {
-    'User-Agent': random.choice(USER_AGENTS)
+    'User-Agent': random.choice(USER_AGENTS),
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+    'Accept-Language': 'en-US,en;q=0.9',
+    'Accept-Encoding': 'gzip, deflate, br',
+    'Connection': 'keep-alive',
+    'Upgrade-Insecure-Requests': '1'
 }
+
 
 
 # Example Headline HTML Element
 
 # <span class="WSJTheme--headlineText--He1ANr9C ">Harris Makes Risky Bet That Walz Can Prop Up Blue Wall</span>
 
-CLASS_OF_HEADLINES = 'span'
-TAG_OF_HEALINES = 'WSJTheme--headlineText--He1ANr9C'
+CLASS_OF_HEADLINES = 'article'
+TAG_OF_HEALINES = 'WSJTheme--headlineText--He1ANr9C '
 
 
 
 def main() -> None:
     
 
-    r = requests.get(url=URL, headers=HEADERS, timeout=2)
+    r = requests.get(url=URL, headers=HEADERS, timeout=5)
 
-    if r.status_code != '200':
 
-        print(f'request failed with code {r.status_code} \n\n {r.text}')
+    if r.status_code != 200:
+
+        print(f'request failed with code {r.status_code}')
         
         raise SystemExit
 
-    soup = bs4.BeautifulSoup(r.content, 'html.parser')
+    soup = bs4.BeautifulSoup(r.text, 'html.parser')
 
 
 
     articles = soup.find_all(name=TAG_OF_HEALINES, attrs={'class': CLASS_OF_HEADLINES}, recursive=True)
 
-    print(articles)
+
     for article in articles:
         print(article)
 
