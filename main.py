@@ -45,10 +45,8 @@ def main() -> None:
 
 
     if r.status_code != 200:
-
-        print(f'request failed with code {r.status_code}')
         
-        raise SystemExit
+        raise SystemExit(f'request failed with code {r.status_code}')
 
     soup = bs4.BeautifulSoup(r.text, 'html.parser')
 
