@@ -44,12 +44,15 @@ def main() -> None:
     r = requests.get(url=URL, headers=HEADERS, timeout=5)
 
 
-    if r.status_code != 200:
+    match r.status_code:
+
+        case 200:
+            
+            soup = bs4.BeautifulSoup(r.text, 'html.parser')
         
-        raise SystemExit(f'request failed with code {r.status_code}')
-
-    soup = bs4.BeautifulSoup(r.text, 'html.parser')
-
+        case _:
+        
+            raise SystemExit(f'request failed with code {r.status_code}')
 
 
     articles = soup.find_all(name=TAG_OF_HEALINES, attrs={'class': CLASS_OF_HEADLINES}, recursive=True)
