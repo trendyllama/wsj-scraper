@@ -37,6 +37,9 @@ CLASS_OF_HEADLINES = 'article'
 TAG_OF_HEALINES = 'WSJTheme--headlineText--He1ANr9C '
 
 
+class RequestError(Exception):
+    pass
+
 
 def main() -> None:
     
@@ -50,9 +53,9 @@ def main() -> None:
             
             soup = bs4.BeautifulSoup(r.text, 'html.parser')
         
-        case _:
+        case _ :
         
-            raise SystemExit(f'request failed with code {r.status_code}')
+            raise RequestError(f'request failed with code {r.status_code} \n {r.headers} \n {r.text}')
 
 
     articles = soup.find_all(name=TAG_OF_HEALINES, attrs={'class': CLASS_OF_HEADLINES}, recursive=True)
@@ -60,8 +63,6 @@ def main() -> None:
 
     for article in articles:
         print(article)
-
-
 
 
 
