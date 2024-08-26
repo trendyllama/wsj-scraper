@@ -1,5 +1,5 @@
 
-from main import main
+from src.main import main
 import unittest
 
 class TestScrapes(unittest.TestCase):
